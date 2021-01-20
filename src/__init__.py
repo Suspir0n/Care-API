@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
-from .configuration import SQLALCHEMY_DATABESE_URI
+from .setting.connection import SQLALCHEMY_DATABESE_URI
 
 app = Flask(__name__)
 
