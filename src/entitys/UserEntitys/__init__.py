@@ -20,12 +20,17 @@ class UserEntitys(database['SQLAlchemy'].Model):
 
 
     def __init__(self, firstName, lastName, email, password, photo, isRoot):
+        self.uid = BaseEntitys.uid
         self.firstName = firstName
         self.lastName = lastName
         self.email = email
         self.password = password
         self.photo = photo
         self.isRoot = isRoot
+
+
+    def __repr__(self):
+        return '' % self.uid
 
 
 database['SQLAlchemy'].create_all()
