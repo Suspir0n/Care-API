@@ -1,6 +1,5 @@
 from src.entitys.BaseEntitys import BaseEntitys
 from src import init_db
-from sqlalchemy.dialects import *
 
 database = init_db()
 
