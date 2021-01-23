@@ -49,6 +49,19 @@ class BaseController:
             return jsonify({'message': 'unable to create', 'data': {}}), 500
 
 
+    async def put(self, req=request, message='', ignore_permissions=False):
+        try:
+            if not ignore_permissions:
+                self.check_not_permission(self) is True
+            try:
+                if self._repository:
+                    return self._repository
+            except Exception as errors:
+                return jsonify({'message': message, 'data': {}}), 404
+        except Exception as errors:
+            return jsonify({'message': errors, 'data': {}}), 404
+
+
     async def remove(self, req=request, message=''):
         try:
             self.check_not_permission(self) is True
