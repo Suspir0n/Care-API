@@ -10,7 +10,6 @@ class UserEntitys(database['SQLAlchemy'].Model):
     lastName = database['SQLAlchemy'].Column(database['SQLAlchemy'].String(100), nullable=False)
     email = database['SQLAlchemy'].Column(database['SQLAlchemy'].String(200), nullable=False)
     password = database['SQLAlchemy'].Column(database['SQLAlchemy'].String(100), nullable=False)
-    photo = database['SQLAlchemy'].Column(database['SQLAlchemy'].String(200), nullable=False)
     isRoot = database['SQLAlchemy'].Column(database['SQLAlchemy'].Boolean, default=False)
 
     def create(self):
@@ -18,13 +17,12 @@ class UserEntitys(database['SQLAlchemy'].Model):
         database['SQLAlchemy'].commit()
 
 
-    def __init__(self, firstName, lastName, email, password, photo, isRoot):
+    def __init__(self, firstName, lastName, email, password, isRoot):
         self.uid = BaseEntitys.uid
         self.firstName = firstName
         self.lastName = lastName
         self.email = email
         self.password = password
-        self.photo = photo
         self.isRoot = isRoot
 
 

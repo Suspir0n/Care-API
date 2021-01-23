@@ -1,8 +1,11 @@
 from src.notification import BaseNotification
 from flask import request, jsonify
+from src import init_db
+
+database = init_db()
 
 
-class BaseController:
+class BaseController(BaseNotification):
     _repository = ''
     _onlyRootController = False
     errorRoot = {'status': 401, 'errors': 'Do you are not authorized to perform this functionality.'}
@@ -40,11 +43,14 @@ class BaseController:
             return jsonify({'message': message, 'data': {}}), 404
 
 
-    async def post(self, req=request, message='', model=dict(), ignore_permissions=False):
+    async def post(self, model, schema, ignore_permissions=False):
         try:
             if not ignore_permissions:
                 self.check_not_permission(self) is True
-            return self._repository
+            database['SQLAlchemy'].session.add(model)
+            database['SQLAlchemy'].session.commit()
+            result = schema.dump(model)
+            return jsonify({'message': 'successfully registered', 'data': result}), 201
         except Exception as errors:
             return jsonify({'message': 'unable to create', 'data': {}}), 500
 
