@@ -53,12 +53,16 @@ To run the program in flask first add the main file in FLASK_APP
 In Windows
 ```
 $ set FLASK_APP=yourfile.py
+$ set FLASK_ENV=Development
+$ set FLASK_DEBUG=True
 $ flask run
 ```
 
 In Mac
 ```
 $ export FLASK_APP=yourfile.py
+$ export FLASK_ENV=Development
+$ export FLASK_DEBUG=True
 $ flask run
 ```
 

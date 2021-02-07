@@ -1,7 +1,7 @@
-from .src import app
+from .app import create_app
 
 
 # run server
 def server():
     if __name__ == '__main__':
-        app.run()
+        create_app().run()
