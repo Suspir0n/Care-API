@@ -13,7 +13,7 @@ class CardModel(db.Model):
     num_card = db.Column(db.String(20), unique=True, nullable=False)
     name = db.Column(db.String(100), unique=True, nullable=False)
     date_valid = db.Column(db.String(10), unique=True, nullable=False)
-    cod_security = db.Column(db.Integer(3), unique=True, nullable=False)
+    cod_security = db.Column(db.Integer, unique=True, nullable=False)
 
 
     def __init__(self, num_card, name, date_valid, cod_security):

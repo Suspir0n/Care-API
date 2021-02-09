@@ -13,11 +13,11 @@ class CartModel(db.Model):
     createAt = db.Column(db.DateTime, default=datetime.datetime.now())
     updateAt = db.Column(db.DateTime, default=datetime.datetime.now())
     product_fk = db.Column(db.String, ForeignKey('product.uid'))
-    product = db.relationship('NewProductModel', backref=backref('product', uselist=False))
+    product = db.relationship('NewProductModel', backref=backref('cart', uselist=False))
     address_fk = db.Column(db.String, ForeignKey('address.uid'))
-    address = db.relationship('AddressModel', backref=backref('address', uselist=False))
+    address = db.relationship('AddressModel', backref=backref('cart', uselist=False))
     card_fk = db.Column(db.String, ForeignKey('card.uid'))
-    card = db.relationship('CardModel', backref=backref('card', uselist=False))
+    card = db.relationship('CardModel', backref=backref('cart', uselist=False))
 
 
     def __init__(self, productFK, addressFK, cardFK):

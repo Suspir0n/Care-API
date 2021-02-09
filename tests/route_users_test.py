@@ -1,6 +1,3 @@
-import json
-
-
 def test_post_user(app, client):
     mock_request_data = {
         "first_name": "Teste",
@@ -23,7 +20,7 @@ def test_get_users(app, client):
 
 
 def test_get_user_by_id(app, client):
-    response = client.get('/users/2')
+    response = client.get('/users/6e6fe41f-1efb-4770-a0ba-818f358f35a4')
     assert response.status_code == 201
     expected = 'successfully fetched'
     assert expected in response.get_data(as_text=True)
@@ -37,7 +34,7 @@ def test_update_user(app, client):
         "password": "senhaTeste"
     }
 
-    response = client.put('/users/2', json=mock_request_data)
+    response = client.put('/users/6e6fe41f-1efb-4770-a0ba-818f358f35a4', json=mock_request_data)
     assert response.status_code == 201
     expected = 'successfully updated'
     assert expected in response.get_data(as_text=True)
