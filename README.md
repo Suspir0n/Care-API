@@ -104,9 +104,129 @@ After running the application, a link will appear where it is
 being executed, accessing it you should see this page, use Postman
 to have a better visibility
 
-<img width="400" src="./prototitypes/prototitype-001.png">
+<img src="./prototitypes/prototitype-001.png">
+
+With that we will have to do the authentication so that you can 
+use the other routes<br><br>
+
+We will have to pass a json, in the case to register / post so 
+that we can authenticate
+
+```
+{
+    "first_name": "Admin",
+    "last_name": "Teste",
+    "email": "teste@gmail.com",
+    "password": "admin"
+}
+```
+The login will be the data you will pass on "first_name"
+
+<img src="./prototitypes/prototitype-002.png">
+
+## Token Authenticate with JWT
+
+With the admin user created, we can authenticate by sending 
+a POST request with authentication of the "BASIC" format to 
+the IP: http://127.0.0.1:5000/auth, filling in the "USERNAME" 
+and "PASSWORD", as below:<br><br>
+<img src="./prototitypes/prototitype-003.png">
 
 
+## Unit Test
+The unit tests of routes were created using pytest, just run the command:
+
+```
+$ pytest tests\ -v -s
+```
+<img src="./prototitypes/prototitype-004.png">
+
+## Project Structure
+
+```
+|-- app
+   |-- controllers
+      |-- __init__.py
+      |-- address_controller.py
+      |-- base_controller.py
+      |-- card_controller.py
+      |-- cart_controller.py
+      |-- category_controller.py
+      |-- helpers.py
+      |-- new_product_controller.py
+      |-- sub_category_controller.py
+      |-- user_controller.py
+   |-- models
+      |-- __init__.py
+      |-- address_model.py
+      |-- card_model.py
+      |-- cart_model.py
+      |-- category_model.py
+      |-- new_product_model.py
+      |-- sub_category_model.py
+      |-- user_model.py
+   |-- routes
+      |-- __init__.py
+      |-- address_routes.py
+      |-- card_routes.py
+      |-- cart_routes.py
+      |-- category_routes.py
+      |-- new_product_routes.py
+      |-- sub_category_routes.py
+      |-- user_routes.py
+   |-- schemas
+      |-- __init__.py
+      |-- address_serealize.py
+      |-- card_serealize.py
+      |-- cart_serealize.py
+      |-- category_serealize.py
+      |-- new_product_serealize.py
+      |-- sub_category_serealize.py
+      |-- user_serealize.py
+   |-- settings
+      |-- __init__.py
+      |-- config.py
+      |-- connection.py
+   |-- __init__.py
+|-- prototitypes
+   |-- prototitype-001.png
+   |-- prototitype-002.png
+   |-- prototitype-003.png
+   |-- prototitype-004.png
+|-- tests
+   |-- happy_way
+      |-- test_field_validation
+         |-- __init__.py
+         |-- field_validation_user_test.py
+      |-- test_routes
+         |-- routes_address_test.py
+         |-- routes_card_test.py
+         |-- routes_cart_test.py
+         |-- routes_category_test.py
+         |-- routes_product_test.py
+         |-- routes_sub_category_test.py
+         |-- routes_users_test.py
+      |-- __init__.py
+   |-- sad_way
+      |-- __init__.py
+   |-- __init__.py
+   |-- app_test.py
+   |-- conftest.py
+|-- venv
+|-- .gitignore
+|-- __init__.py
+|-- README.md    
+|-- requirements.txt
+```
+app >> folder contains all API data, controlles, models, schemas, 
+settings, all necessary data.
+<br><br>
+test folder >> contains route tests and field validation on the 
+sad and happy path.
+<br><br>
+venv >> folder contains all the data of the premises that you 
+will use.
+<br><br>
 
 ## Features
 
@@ -120,3 +240,13 @@ To execute the project, it is necessary to use VsCode or an IDE of your preferen
 
 Contributions are always welcome! I hope I have helped someone in need.
 
+## Credits
+
+I want to thank Matheus Miller because he was able to learn how to
+create a part of the API itself.<br><br>
+His repository: https://github.com/MatheusMullerGit/api-rest-flask-jwt-authentication
+<br>
+Linkedin: https://www.linkedin.com/in/matheus-herrera-bezerra-muller/
+
+## 🔓 License
+MIT © [Evandro Silva](https://www.linkedin.com/in/suspir0n/)
