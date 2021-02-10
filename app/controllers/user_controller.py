@@ -52,3 +52,10 @@ def passed_data_fields_model(uid, fisrtName, lastName, email, password):
     user.email = email
     user.password = pass_hash
     return user
+
+
+def user_by_username(username):
+    try:
+        return UserModel.query.filter(UserModel.fisrtName == username).one()
+    except:
+        return None

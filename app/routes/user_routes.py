@@ -1,7 +1,17 @@
-from flask import Blueprint
-from ..controllers import user_controller
+from flask import Blueprint, jsonify
+from ..controllers import user_controller, helpers
 
 bp_users = Blueprint('users', __name__)
+
+
+@bp_users.route('/auth', methods=['POST'])
+def authenticate():
+    return helpers.auth()
+
+@bp_users.route('/', methods=['GET'])
+@helpers.token_required
+def root(current_user):
+    return jsonify({'message': f'Hello {current_user.name}'})
 
 @bp_users.route('/users', methods=['GET'])
 def get_users():
@@ -11,7 +21,6 @@ def get_users():
 @bp_users.route('/users/<uid>', methods=['GET'])
 def get_user(uid):
     return user_controller.get_user(uid)
-
 
 
 @bp_users.route('/users', methods=['POST'])

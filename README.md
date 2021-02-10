@@ -34,28 +34,22 @@ $ pip3 install -r requirements.txt
 These are the requirements.txt dependencies:
 
 ```
-Flask==1.1.2
-flask-marshmallow==0.14.0
-Flask-SQLAlchemy==2.4.4
-marshmallow==3.9.1
-marshmallow-sqlalchemy==0.24.0
-PyJWT==1.7.1
-PyMySQL==0.10.1
-pyparsing==2.4.7
+flask==1.1.2
 pytest==6.1.2
-SQLAlchemy==1.3.20
-pytest-flask
-pytest-cov
+flask-sqlalchemy==2.4.4
+pymysql==1.0.2
+flask-marshmallow==0.14.0
+PyJWT==2.0.1
+PyTest
 ```
 
-To run the program in flask first add the main file in FLASK_APP
+Make these settings so that your Flask application works perfectly
 
 In Windows
 ```
 $ set FLASK_APP=yourfile.py
 $ set FLASK_ENV=Development
 $ set FLASK_DEBUG=True
-$ flask run
 ```
 
 In Mac
@@ -63,6 +57,29 @@ In Mac
 $ export FLASK_APP=yourfile.py
 $ export FLASK_ENV=Development
 $ export FLASK_DEBUG=True
+```
+
+#### Database configuration 
+
+I will show you how to connect to the mySQL database 
+and its configuration. Remember, it does not create the 
+database alone or the table so you have to create the 
+database and tables first.
+
+```
+def connect_db(app):
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost:3306/yourdatabase'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    
+def config_db(app):
+    db.init_app(app)
+    app.app_context().push()
+    db.create_all(app=app)
+    app.db = db
+```
+
+After you set up the database, run your flask application
+```
 $ flask run
 ```
 
@@ -82,6 +99,14 @@ If you want to choose the host where it runs run this command
 ```
 $ flask host 0.0.0.0
 ```
+
+After running the application, a link will appear where it is 
+being executed, accessing it you should see this page, use Postman
+to have a better visibility
+
+<img width="400" src="./prototitypes/prototitype-001.png">
+
+
 
 ## Features
 
