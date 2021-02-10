@@ -1,80 +1,54 @@
 import datetime
 from werkzeug.security import generate_password_hash
-from flask import current_app, request, jsonify
+from flask import request, jsonify
 from ..models.user_model import UserModel
 from ..schemas.user_serealize import user_schema, users_schema
+from .base_controller import get_all, get_one, delete, post, update
 
 
 def get_users():
-    users = UserModel.query.all()
-    if users:
-        result = users_schema.dump(users)
-        return jsonify({'message': 'successfully fetched', 'data': result}), 200
-
-    return jsonify({'message': 'user dont exist', 'data': {}}), 404
+    return get_all(UserModel, users_schema, 'user')
 
 
 def get_user(uid):
-    user = UserModel.query.get(uid)
-    if user:
-        result = user_schema.dump(user)
-        return jsonify({'message': 'successfully fetched', 'data': result}), 201
-
-    return jsonify({'message': 'user dont exist', 'data': {}}), 404
+    return get_one(uid, UserModel, user_schema, 'user')
 
 
 def delete_user(uid):
-    user = UserModel.query.get(uid)
-    if not user:
-        return jsonify({'message': 'user dont exist', 'data': {}}), 404
-    if user:
-        try:
-            current_app.db.session.delete(user)
-            current_app.db.session.commit()
-            result = user_schema.dump(user)
-            return jsonify({'message': 'successfully deleted', 'data': result}), 200
-        except Exception as error:
-            return jsonify({'message': 'unable to delete', 'data': {}}), 500
-
+    return delete(uid, UserModel, user_schema, 'user')
 
 
 def update_user(uid):
-    fisrtName = request.json['first_name']
-    lastName = request.json['last_name']
-    email = request.json['email']
-    password = request.json['password']
-    user = UserModel.query.get(uid)
-
-    if not user:
-        return jsonify({'message': "user don't exist", 'data': {}}), 404
-
-    pass_hash = generate_password_hash(password)
-
-    if user:
-        try:
-            user.update = datetime.datetime.now()
-            user.fisrtName = fisrtName
-            user.lastName = lastName
-            user.email = email
-            user.password = pass_hash
-            current_app.db.session.commit()
-            result = user_schema.dump(user)
-            return jsonify({'message': 'successfully updated', 'data': result}), 201
-        except Exception as error:
-            return jsonify({'message': 'unable to update', 'data': {}}), 500
+    user = gut_fields(uid)
+    return update(user_schema, user['update'], 'user')
 
 
 def post_user():
+    user = gut_fields()
+    return post(user_schema, user['post'])
+
+
+
+def gut_fields(uid=''):
     fisrtName = request.json['first_name']
     lastName = request.json['last_name']
     email = request.json['email']
     password = request.json['password']
     pass_hash = generate_password_hash(password)
-    user = UserModel(fisrtName, lastName, email, pass_hash)
-    try:
-        current_app.db.session.add(user)
-        current_app.db.session.commit()
-        result = user_schema.dump(user)
-        return jsonify({'message': 'successfully registered', 'data': result}), 201
-    except:
-        return jsonify({'message': 'unable to create', 'data': {}}), 500
+    user_update = passed_data_fields_model(uid, fisrtName, lastName, email, password)
+    user_post = UserModel(fisrtName, lastName, email, pass_hash)
+    data = {'post': user_post, 'update': user_update}
+    return data
+
+
+def passed_data_fields_model(uid, fisrtName, lastName, email, password):
+    user = UserModel.query.get(uid)
+    if not user:
+        return jsonify({'message': "user don't exist", 'data': {}}), 404
+    pass_hash = generate_password_hash(password)
+    user.update = datetime.datetime.now()
+    user.fisrtName = fisrtName
+    user.lastName = lastName
+    user.email = email
+    user.password = pass_hash
+    return user

@@ -21,7 +21,7 @@ def test_get_addresss(app, client):
 
 
 def test_get_address_by_id(app, client):
-    response = client.get('/address/e59999a5-ba37-4e05-9b06-18ca88c3ffce')
+    response = client.get('/address/1e410531-0830-4e62-97cb-e4b3fe20aad0')
     assert response.status_code == 201
     expected = 'successfully fetched'
     assert expected in response.get_data(as_text=True)
@@ -37,7 +37,7 @@ def test_update_address(app, client):
         "zipcode": "41335-225",
         "phone": "+5571988552233"
     }
-    response = client.put('/address/e59999a5-ba37-4e05-9b06-18ca88c3ffce', json=mock_request_data)
+    response = client.put('/address/1e410531-0830-4e62-97cb-e4b3fe20aad0', json=mock_request_data)
     assert response.status_code == 201
     expected = 'successfully updated'
     assert expected in response.get_data(as_text=True)
@@ -45,6 +45,6 @@ def test_update_address(app, client):
 
 def test_delete_address(app, client):
     response = client.delete('/address/e59999a5-ba37-4e05-9b06-18ca88c3ffce')
-    assert response.status_code == 200
-    expected = 'successfully deleted'
+    assert response.status_code == 404
+    expected = 'address dont exist'
     assert expected in response.get_data(as_text=True)

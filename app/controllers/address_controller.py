@@ -1,72 +1,33 @@
 import datetime
-from flask import current_app, request, jsonify
+from flask import request, jsonify
 from ..models.address_model import AddressModel
 from ..schemas.address_serealize import address_schema, addresss_schema
+from .base_controller import get_all, get_one, delete, post, update
 
 
 def get_addresss():
-    addresss = AddressModel.query.all()
-    if addresss:
-        result = addresss_schema.dump(addresss)
-        return jsonify({'message': 'successfully fetched', 'data': result}), 200
-
-    return jsonify({'message': 'address dont exist', 'data': {}}), 404
+    return get_all(AddressModel, addresss_schema, 'address')
 
 
 def get_address(uid):
-    address = AddressModel.query.get(uid)
-    if address:
-        result = address_schema.dump(address)
-        return jsonify({'message': 'successfully fetched', 'data': result}), 201
-
-    return jsonify({'message': 'address dont exist', 'data': {}}), 404
+    return get_one(uid, AddressModel, address_schema, 'address')
 
 
 def delete_address(uid):
-    address = AddressModel.query.get(uid)
-    if not address:
-        return jsonify({'message': 'address dont exist', 'data': {}}), 404
-    if address:
-        try:
-            current_app.db.session.delete(address)
-            current_app.db.session.commit()
-            result = address_schema.dump(address)
-            return jsonify({'message': 'successfully deleted', 'data': result}), 200
-        except Exception as error:
-            return jsonify({'message': 'unable to delete', 'data': {}}), 500
-
+    return delete(uid, AddressModel, address_schema, 'address')
 
 
 def update_address(uid):
-    user_fk = request.json['user_fk']
-    address = request.json['address']
-    address_complementation = request.json['address_complementation']
-    state = request.json['state']
-    city = request.json['city']
-    zipcode = request.json['zipcode']
-    phone = request.json['phone']
-    _address = AddressModel.query.get(uid)
-
-    if not _address:
-        return jsonify({'message': "address don't exist", 'data': {}}), 404
-    if _address:
-        try:
-            _address.update = datetime.datetime.now()
-            _address.user_fk = user_fk
-            _address.address = address
-            _address.address_complementation = address_complementation
-            _address.state = state
-            _address.city = city
-            _address.zipcode = zipcode
-            _address.phone = phone
-            current_app.db.session.commit()
-            result = address_schema.dump(_address)
-            return jsonify({'message': 'successfully updated', 'data': result}), 201
-        except Exception as error:
-            return jsonify({'message': 'unable to update', 'data': {}}), 500
+    address = gut_fields(uid)
+    return update(address_schema, address['update'], 'address')
 
 
 def post_address():
+    address = gut_fields()
+    return post(address_schema, address['post'])
+
+
+def gut_fields(uid=''):
     user_fk = request.json['user_fk']
     address = request.json['address']
     address_complementation = request.json['address_complementation']
@@ -74,11 +35,22 @@ def post_address():
     city = request.json['city']
     zipcode = request.json['zipcode']
     phone = request.json['phone']
-    _address = AddressModel(user_fk, address, address_complementation, state, city, zipcode, phone)
-    try:
-        current_app.db.session.add(_address)
-        current_app.db.session.commit()
-        result = address_schema.dump(_address)
-        return jsonify({'message': 'successfully registered', 'data': result}), 201
-    except:
-        return jsonify({'message': 'unable to create', 'data': {}}), 500
+    _address_post = AddressModel(user_fk, address, address_complementation, state, city, zipcode, phone)
+    _address_update = passed_data_fields_model(uid, user_fk, address, address_complementation, state, city, zipcode, phone)
+    data = {'post': _address_post, 'update': _address_update}
+    return data
+
+
+def passed_data_fields_model(uid, user_fk, address, address_complementation, state, city, zipcode, phone):
+    _address = AddressModel.query.get(uid)
+    if not _address:
+        return jsonify({'message': "address don't exist", 'data': {}}), 404
+    _address.update = datetime.datetime.now()
+    _address.user_fk = user_fk
+    _address.address = address
+    _address.address_complementation = address_complementation
+    _address.state = state
+    _address.city = city
+    _address.zipcode = zipcode
+    _address.phone = phone
+    return _address

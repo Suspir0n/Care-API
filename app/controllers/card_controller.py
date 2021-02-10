@@ -1,75 +1,50 @@
 import datetime
-from flask import current_app, request, jsonify
+from flask import request, jsonify
 from ..models.card_model import CardModel
 from ..schemas.card_serealize import card_schema, cards_schema
+from .base_controller import get_all, get_one, delete, post, update
 
 
 def get_cards():
-    cards = CardModel.query.all()
-    if cards:
-        result = cards_schema.dump(cards)
-        return jsonify({'message': 'successfully fetched', 'data': result}), 200
-
-    return jsonify({'message': 'card dont exist', 'data': {}}), 404
+    return get_all(CardModel, cards_schema, 'card')
 
 
 def get_card(uid):
-    card = CardModel.query.get(uid)
-    if card:
-        result = card_schema.dump(card)
-        return jsonify({'message': 'successfully fetched', 'data': result}), 201
-
-    return jsonify({'message': 'card dont exist', 'data': {}}), 404
+    return get_one(uid, CardModel, card_schema, 'card')
 
 
 def delete_card(uid):
-    card = CardModel.query.get(uid)
-    if not card:
-        return jsonify({'message': 'card dont exist', 'data': {}}), 404
-    if card:
-        try:
-            current_app.db.session.delete(card)
-            current_app.db.session.commit()
-            result = card_schema.dump(card)
-            return jsonify({'message': 'successfully deleted', 'data': result}), 200
-        except Exception as error:
-            return jsonify({'message': 'unable to delete', 'data': {}}), 500
-
+    return delete(uid, CardModel, card_schema, 'card')
 
 
 def update_card(uid):
-    num_card = request.json['num_card']
-    name = request.json['name']
-    date_valid = request.json['date_valid']
-    cod_security = request.json['cod_security']
-    card = CardModel.query.get(uid)
-
-    if not card:
-        return jsonify({'message': "card don't exist", 'data': {}}), 404
-    if card:
-        try:
-            card.update = datetime.datetime.now()
-            card.num_card = num_card
-            card.name = name
-            card.date_valid = date_valid
-            card.cod_security = cod_security
-            current_app.db.session.commit()
-            result = card_schema.dump(card)
-            return jsonify({'message': 'successfully updated', 'data': result}), 201
-        except Exception as error:
-            return jsonify({'message': 'unable to update', 'data': {}}), 500
+    card = gut_fields(uid)
+    return update(card_schema, card['update'], 'card')
 
 
 def post_card():
+    card = gut_fields()
+    return post(card_schema, card['post'])
+
+
+def gut_fields(uid=''):
     num_card = request.json['num_card']
     name = request.json['name']
     date_valid = request.json['date_valid']
     cod_security = request.json['cod_security']
-    card = CardModel(num_card, name, date_valid, cod_security)
-    try:
-        current_app.db.session.add(card)
-        current_app.db.session.commit()
-        result = card_schema.dump(card)
-        return jsonify({'message': 'successfully registered', 'data': result}), 201
-    except:
-        return jsonify({'message': 'unable to create', 'data': {}}), 500
+    card_post = CardModel(num_card, name, date_valid, cod_security)
+    card_update = passed_data_fields_model(uid, num_card, name, date_valid, cod_security)
+    data = {'post': card_post, 'update': card_update}
+    return data
+
+
+def passed_data_fields_model(uid, num_card, name, date_valid, cod_security):
+    card = CardModel.query.get(uid)
+    if not card:
+        return jsonify({'message': "card don't exist", 'data': {}}), 404
+    card.update = datetime.datetime.now()
+    card.num_card = num_card
+    card.name = name
+    card.date_valid = date_valid
+    card.cod_security = cod_security
+    return card

@@ -15,9 +15,9 @@ class SubCategoryModel(db.Model):
     category_fk = db.Column(db.String, ForeignKey('category.uid'))
     category = db.relationship('CategoryModel', backref=backref('category', uselist=False))
     name = db.Column(db.String(200), unique=True, nullable=False)
-    decription = db.Column(db.String(500), unique=True, nullable=False)
+    description = db.Column(db.String(500), unique=True, nullable=False)
 
-    def __init__(self, categoryFK, name, decription):
+    def __init__(self, categoryFK, name, description):
         self.category_fk = categoryFK
         self.name = name
-        self.description = decription
+        self.description = description

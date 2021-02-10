@@ -1,72 +1,48 @@
 import datetime
-from flask import current_app, request, jsonify
+from flask import request, jsonify
 from ..models.cart_model import CartModel
 from ..schemas.cart_serealize import cart_schema, carts_schema
+from .base_controller import get_all, get_one, delete, post, update
 
 
 def get_carts():
-    carts = CartModel.query.all()
-    if carts:
-        result = carts_schema.dump(carts)
-        return jsonify({'message': 'successfully fetched', 'data': result}), 200
-
-    return jsonify({'message': 'cart dont exist', 'data': {}}), 404
+    return get_all(CartModel, carts_schema, 'cart')
 
 
 def get_cart(uid):
-    cart = CartModel.query.get(uid)
-    if cart:
-        result = cart_schema.dump(cart)
-        return jsonify({'message': 'successfully fetched', 'data': result}), 201
-
-    return jsonify({'message': 'cart dont exist', 'data': {}}), 404
+    return get_one(uid, CartModel, cart_schema, 'cart')
 
 
 def delete_cart(uid):
-    cart = CartModel.query.get(uid)
-    if not cart:
-        return jsonify({'message': 'cart dont exist', 'data': {}}), 404
-    if cart:
-        try:
-            current_app.db.session.delete(cart)
-            current_app.db.session.commit()
-            result = cart_schema.dump(cart)
-            return jsonify({'message': 'successfully deleted', 'data': result}), 200
-        except Exception as error:
-            return jsonify({'message': 'unable to delete', 'data': {}}), 500
-
+    return delete(uid, CartModel, cart_schema, 'cart')
 
 
 def update_cart(uid):
-    product_fk = request.json['product_fk']
-    address_fk = request.json['address_fk']
-    card_fk = request.json['card_fk']
-    cart = CartModel.query.get(uid)
-
-    if not cart:
-        return jsonify({'message': "cart don't exist", 'data': {}}), 404
-    if cart:
-        try:
-            cart.update = datetime.datetime.now()
-            cart.product_fk = product_fk
-            cart.address_fk = address_fk
-            cart.card_fk = card_fk
-            current_app.db.session.commit()
-            result = cart_schema.dump(cart)
-            return jsonify({'message': 'successfully updated', 'data': result}), 201
-        except Exception as error:
-            return jsonify({'message': 'unable to update', 'data': {}}), 500
+    cart = gut_fields(uid)
+    return update(cart_schema, cart['update'], 'cart')
 
 
 def post_cart():
+    cart = gut_fields()
+    return post(cart_schema, cart['post'])
+
+
+def gut_fields(uid=''):
     product_fk = request.json['product_fk']
     address_fk = request.json['address_fk']
     card_fk = request.json['card_fk']
-    cart = CartModel(product_fk, address_fk, card_fk)
-    try:
-        current_app.db.session.add(cart)
-        current_app.db.session.commit()
-        result = cart_schema.dump(cart)
-        return jsonify({'message': 'successfully registered', 'data': result}), 201
-    except:
-        return jsonify({'message': 'unable to create', 'data': {}}), 500
+    cart_post = CartModel(product_fk, address_fk, card_fk)
+    cart_update = passed_data_fields_model(uid, product_fk, address_fk, card_fk)
+    data = {'post': cart_post, 'update': cart_update}
+    return data
+
+
+def passed_data_fields_model(uid, product_fk, address_fk, card_fk):
+    cart = CartModel.query.get(uid)
+    if not cart:
+        return jsonify({'message': "cart don't exist", 'data': {}}), 404
+    cart.update = datetime.datetime.now()
+    cart.product_fk = product_fk
+    cart.address_fk = address_fk
+    cart.card_fk = card_fk
+    return cart
