@@ -33,3 +33,10 @@ def config_bp(app):
     app.register_blueprint(category_routes.bp_category)
     app.register_blueprint(sub_category_routes.bp_sub_category)
     app.register_blueprint(new_product_routes.bp_product)
+
+
+def config_photo():
+    folder_storage = '.storage'
+    picture_quality = 80
+    photo = {'folder': folder_storage, 'quality': picture_quality}
+    return photo

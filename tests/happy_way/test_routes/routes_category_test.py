@@ -1,6 +1,6 @@
 def test_post_category(app, client):
     mock_request_data = {
-        "name": "cadeira de garrafa",
+        "name": "Garrafa",
         "description": "feita de garrafa"
     }
     response = client.post('/categorys', json=mock_request_data)

@@ -33,13 +33,14 @@ def gut_fields(uid=''):
     name = request.json['name']
     description = request.json['description']
     value = request.json['value']
-    product_post = NewProductModel(user_fk, sub_category_fk, name, description, value)
-    product_update = passed_data_fields_model(uid, user_fk, sub_category_fk, name, description, value)
+    photo = request.json['photo']
+    product_post = NewProductModel(user_fk, sub_category_fk, name, description, value, photo)
+    product_update = passed_data_fields_model(uid, user_fk, sub_category_fk, name, description, value, photo)
     data = {'post': product_post, 'update': product_update}
     return data
 
 
-def passed_data_fields_model(uid, user_fk, sub_category_fk, name, description, value):
+def passed_data_fields_model(uid, user_fk, sub_category_fk, name, description, value, photo):
     product = NewProductModel.query.get(uid)
     if not product:
         return jsonify({'message': "product don't exist", 'data': {}}), 404
@@ -49,4 +50,5 @@ def passed_data_fields_model(uid, user_fk, sub_category_fk, name, description, v
     product.name = name
     product.description = description
     product.value = value
+    product.photo = photo
     return product

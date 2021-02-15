@@ -4,6 +4,7 @@ from flask import request, jsonify
 from ..models.user_model import UserModel
 from ..schemas.user_serealize import user_schema, users_schema
 from .base_controller import get_all, get_one, delete, post, update
+from ..notify.base_notification import is_required 
 
 
 def get_users():
@@ -28,6 +29,12 @@ def post_user():
     return post(user_schema, user['post'])
 
 
+def validation_fields(fisrtName, lastName, email, password):
+    is_required(fisrtName, 'Informe o seu primeiro nome!')
+    is_required(lastName, 'Informe o seu sobrenome!')
+    is_required(email, 'Informe o seu email!')
+    is_required(password, 'Informe a sua senha!')
+
 
 def gut_fields(uid=''):
     fisrtName = request.json['first_name']
@@ -35,6 +42,7 @@ def gut_fields(uid=''):
     email = request.json['email']
     password = request.json['password']
     pass_hash = generate_password_hash(password)
+    validation_fields(fisrtName, lastName, email, password)
     user_update = passed_data_fields_model(uid, fisrtName, lastName, email, password)
     user_post = UserModel(fisrtName, lastName, email, pass_hash)
     data = {'post': user_post, 'update': user_update}
@@ -54,8 +62,8 @@ def passed_data_fields_model(uid, fisrtName, lastName, email, password):
     return user
 
 
-def user_by_username(username):
+def user_by_auth(email):
     try:
-        return UserModel.query.filter(UserModel.fisrtName == username).one()
+        return UserModel.query.filter(UserModel.email == email).one()
     except:
-        return None
+        return jsonify({'status': 400, 'message': 'Erro de conexão com a banco de dados'})

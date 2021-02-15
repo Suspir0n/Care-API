@@ -19,10 +19,12 @@ class NewProductModel(db.Model):
     name = db.Column(db.String(200), unique=True, nullable=False)
     description = db.Column(db.String(500), unique=True, nullable=False)
     value = db.Column(db.String(10), nullable=False)
+    photo = db.Column(db.String(200), unique=True, nullable=False)
 
-    def __init__(self, userFK, sub_categoryFK, name, description, value):
+    def __init__(self, userFK, sub_categoryFK, name, description, value, photo):
         self.user_fk = userFK
         self.sub_category_fk = sub_categoryFK
         self.name = name
         self.description = description
         self.value = value
+        self.photo = photo

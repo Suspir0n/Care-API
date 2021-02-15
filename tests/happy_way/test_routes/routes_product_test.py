@@ -1,10 +1,11 @@
 def test_post_product(app, client):
     mock_request_data = {
-        "user_fk": "029e8c67-b750-4f59-8980-bdfc07895fbd",
+        "user_fk": "a9b53c5a-e5e8-420a-91b7-6793259e349e",
         "sub_category_fk": "22265d14-d9b9-408b-994e-05ef5cf15bed",
-        "name": "teste",
-        "description": "teste rodando",
-        "value": "999,99"
+        "name": "Cadeira Pet",
+        "description": "cadeira feita de garrafa pet",
+        "value": "R$ 25,99",
+        "photo": ""
     }
     response = client.post('/products', json=mock_request_data)
     assert response.status_code == 201
