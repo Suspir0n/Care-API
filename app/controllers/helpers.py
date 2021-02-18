@@ -8,7 +8,7 @@ from json import dumps
 from werkzeug.security import check_password_hash
 
 
-def token_required(f):
+"""def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         token = request.args.get('token')
@@ -52,3 +52,4 @@ def check_credential_exits(email, password):
     if not email or not password:
         return jsonify({'status': 400, 'message': 'Informe o email e a senha para efetuar o login!'})
 
+"""

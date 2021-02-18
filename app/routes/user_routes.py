@@ -1,20 +1,22 @@
 from flask import Blueprint, jsonify, current_app
-from ..controllers import user_controller, helpers
-from flask_cors import CORS, cross_origin
+#from flask_cors import CORS, cross_origin
+from ..controllers import user_controller
+from ..middlaware.auth import auth
+from flask_jwt_extended import create_access_token, jwt_required
 
-cors = CORS(current_app)
+#cors = CORS(current_app)
 current_app.config['CORS_HEADERS'] = 'Content-Type'
 bp_users = Blueprint('users', __name__)
 
 
 @bp_users.route('/auth', methods=['POST'])
-@cross_origin()
+#@cross_origin()
 def authenticate():
-    return helpers.auth()
+    return auth()
 
 @bp_users.route('/', methods=['GET'])
-@helpers.token_required
-def root(token):
+@jwt_required()
+def root():
     return jsonify({'message': 'Hello Wold'})
 
 @bp_users.route('/users', methods=['GET'])
@@ -33,10 +35,12 @@ def post_user():
 
 
 @bp_users.route('/users/<uid>', methods=['DELETE'])
+@jwt_required()
 def delete_users(uid):
     return user_controller.delete_user(uid)
 
 
 @bp_users.route('/users/<uid>', methods=['PUT'])
+@jwt_required()
 def update_users(uid):
     return user_controller.update_user(uid)

@@ -9,6 +9,15 @@ ma = Marshmallow()
 random_str = string.ascii_letters + string.digits + string.ascii_uppercase
 key = ''.join(random.choice(random_str) for i in range(12))
 
+def config_JWT(app): 
+    app.config['JWT_TOKEN_LOCATION'] = ['headers', 'query_string']
+    # especifica a chave sercreta
+    app.config['JWT_SECRET_KEY'] = 'Chavesecreta'
+    # Informa ao sistema que o app irá conter uma blacklist
+    app.config['JWT_BLACKLIST_ENABLED'] = True
+    app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access', 'refresh']
+
+
 def secret_key(app):
     app.config['SECRET_KEY'] = key
 
