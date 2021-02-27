@@ -30,7 +30,7 @@ def delete(uid, model, schema, name_model):
             result = schema.dump(data)
             return jsonify({'message': 'successfully deleted', 'data': result}), 200
         except Exception as error:
-            return jsonify({'message': 'unable to delete', 'data': {}}), 500
+            return jsonify({'message': 'unable to delete', 'data': {}}), 404
 
 
 
@@ -42,8 +42,8 @@ def update(schema, data, name_model):
             current_app.db.session.commit()
             result = schema.dump(data)
             return jsonify({'message': 'successfully updated', 'data': result}), 201
-        except Exception as error:
-            return jsonify({'message': 'unable to update', 'data': {}}), 500
+        except:
+            return jsonify({'message': 'unable to update', 'data': {}}), 404
 
 
 def post(schema, data):
@@ -52,5 +52,5 @@ def post(schema, data):
         current_app.db.session.commit()
         result = schema.dump(data)
         return jsonify({'message': 'successfully registered', 'data': result}), 201
-    except:
-        return jsonify({'message': 'unable to create', 'data': {}}), 500
+    except Exception as error:
+        return jsonify({'message': 'unable to create', 'data': {}, 'error': error}), 500

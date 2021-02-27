@@ -7,7 +7,7 @@ from ..settings.config import db
 
 class CartModel(db.Model):
     __tablename__ = 'cart'
-    uid = db.Column(db.String, primary_key=True, default=uuid.uuid4, unique=True)
+    uid = db.Column(db.String, primary_key=True, default=uuid.uuid4(), unique=True)
     active = db.Column(db.Boolean, default=True)
     deleted = db.Column(db.Boolean, default=False)
     createAt = db.Column(db.DateTime, default=datetime.datetime.now())

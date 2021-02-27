@@ -20,7 +20,7 @@ def test_get_users(app, client):
 
 
 def test_get_user_by_id(app, client):
-    response = client.get('/users/6e6fe41f-1efb-4770-a0ba-818f358f35a4')
+    response = client.get('/users/1eabfe60-f488-49ad-a99c-8a65d43ffbc0')
     assert response.status_code == 201
     expected = 'successfully fetched'
     assert expected in response.get_data(as_text=True)
@@ -34,7 +34,7 @@ def test_update_user(app, client):
         "password": "senhaTeste"
     }
 
-    response = client.put('/users/6e6fe41f-1efb-4770-a0ba-818f358f35a4', json=mock_request_data)
+    response = client.put('/users/1eabfe60-f488-49ad-a99c-8a65d43ffbc0', json=mock_request_data)
     assert response.status_code == 201
     expected = 'successfully updated'
     assert expected in response.get_data(as_text=True)
@@ -43,5 +43,5 @@ def test_update_user(app, client):
 def test_delete_user(app, client):
     response = client.delete('/users/3')
     assert response.status_code == 404
-    expected = 'user dont exist'
+    expected = 'unable to delete'
     assert expected in response.get_data(as_text=True)

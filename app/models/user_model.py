@@ -5,7 +5,7 @@ from ..settings.config import db
 
 class UserModel(db.Model):
     __tablename__ = 'user'
-    uid = db.Column(db.String, primary_key=True, default=uuid.uuid4, unique=True)
+    uid = db.Column(db.String, primary_key=True, default=str(uuid.uuid4()), unique=True)
     active = db.Column(db.Boolean, default=True)
     deleted = db.Column(db.Boolean, default=False)
     createAt = db.Column(db.DateTime, default=datetime.datetime.now())
